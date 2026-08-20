@@ -1,0 +1,897 @@
+/* ============================================================
+   AlphaWerx — alphawerx.css  (SINGLE FILE BUILD, phase 1)
+   core.css + site CSS merged into one browser file, same order
+   they loaded in Webflow (core first, then site) — cascade
+   behavior is identical to the two-file version on the sandbox.
+
+   Serve via jsDelivr (pinned release):
+   https://cdn.jsdelivr.net/gh/hamounbv/alphawerx@1.0.0/css/alphawerx.min.css
+   (.min.css is generated automatically by jsDelivr)
+
+   BAKED-IN CHANGE vs the sandbox files (see README):
+   - The [data-gsap-reveal]/[data-gsap-title] hide rules at the very
+     bottom now carry a pure-CSS 2.5s failsafe, so page copy can
+     never stay invisible if the JS fails to arrive.
+   Everything else is byte-faithful to p9d736's core.css + alphawerx.css.
+   ============================================================ */
+
+/* ╔═══════════════════════════════════════════════════════════════╗
+   ║  PART 1 — STUDIO CORE  (was core/core.css)                    ║
+   ╚═══════════════════════════════════════════════════════════════╝ */
+
+/* ═════════════════════════════════════════════════════════════════
+   Blankboard Studio — core.css  (shared by every NEW project)
+   Plain stylesheet: no build step. Brand colors/fonts live in each
+   site's own CSS file, not here.
+   ═════════════════════════════════════════════════════════════════ */
+
+/* ------------------------------------------------
+   Token Hub — scaling system + motion (studio defaults)
+   Brand colors/fonts live in sites/<site>/tokens.css
+   ------------------------------------------------ */
+:root {
+  /* Scaling System */
+  --size-unit: 16; /* Body font-size in design units (no px) */
+  --size-container-ideal: 1680;
+  --size-container-min: 1280px;
+  --size-container-max: 1920px;
+
+  --size-container: clamp(
+    var(--size-container-min),
+    100vw,
+    var(--size-container-max)
+  );
+
+  --size-font: calc(
+    var(--size-container) / (var(--size-container-ideal) / var(--size-unit))
+  );
+
+  font-size: var(--size-font);
+
+  /* Motion + timing */
+  --ease-bbs: cubic-bezier(0.65, 0.05, 0, 1);
+  --dur-bbs: 735ms;
+
+  /* Underline effect */
+  --underline-top: 100%;
+  --underline-height: 1px;
+  --inline-underline-opacity: 0.48;
+
+  /* Loops */
+  --loop-x-duration: 60s;
+  --loop-y-duration: 32s;
+
+  /* SVG dash */
+  --svg-dash-duration: 8s;
+  --svg-dash-offset: 600;
+
+  /* Zoom */
+  --image-zoom-scale: 1.12;
+}
+
+/* Tablet */
+@media screen and (max-width: 991px) {
+  :root {
+    --size-container-ideal: 834;
+    --size-container-min: 768px;
+    --size-container-max: 991px;
+  }
+}
+
+/* Mobile Landscape */
+@media screen and (max-width: 767px) {
+  :root {
+    --size-container-ideal: 430;
+    --size-container-min: 480px;
+    --size-container-max: 767px;
+  }
+}
+
+/* Mobile Portrait */
+@media screen and (max-width: 479px) {
+  :root {
+    --size-container-ideal: 430;
+    --size-container-min: 320px;
+    --size-container-max: 428px;
+  }
+}
+
+/* ------------------------------------------------
+   Reset & Box Model
+   ------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+  text-size-adjust: 100%;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: 8%;
+  text-underline-offset: -8%;
+  text-underline-position: from-font;
+}
+
+html {
+  scroll-behavior: initial;
+  scrollbar-width: none; /* Firefox */
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  width: 100vw;
+  font-feature-settings: "liga" 1, "calt" 1;
+  -ms-overflow-style: none; /* IE & Edge */
+}
+
+/* Hide scrollbars universally */
+body::-webkit-scrollbar,
+body ::-webkit-scrollbar {
+  display: none;
+}
+
+svg {
+  max-width: none;
+  height: auto;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+a {
+  color: inherit;
+}
+
+/* ------------------------------------------------
+   Typography Utilities (rich text trimming)
+   Lower specificity (:where) so Webflow overrides stay easy
+   ------------------------------------------------ */
+.rte :where(:first-child, div:first-child > :first-child),
+.content-rte :where(:first-child, div:first-child > :first-child),
+.case-study :where(:first-child, div:first-child > :first-child) {
+  margin-top: 0 !important;
+}
+.rte :where(:last-child, div:first-child > :last-child),
+.content-rte :where(:last-child, div:first-child > :last-child),
+.case-study :where(:last-child, div:first-child > :last-child) {
+  margin-bottom: 0 !important;
+}
+
+.w-richtext::after,
+.w-richtext::before {
+  display: none;
+}
+
+/* ------------------------------------------------
+   Utility Attributes
+   ------------------------------------------------ */
+[scroll-show="false"] {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+[scroll-show="false"]::-webkit-scrollbar {
+  display: none;
+}
+
+/* Truncate Text Utility (single core rule + variable override) */
+[data-truncate] {
+  --truncate-lines: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-line-clamp: var(--truncate-lines);
+}
+
+[data-truncate="1"] {
+  --truncate-lines: 1;
+}
+[data-truncate="2"] {
+  --truncate-lines: 2;
+}
+[data-truncate="3"] {
+  --truncate-lines: 3;
+}
+
+/* Selection Highlight */
+@supports (background-color: color-mix(in srgb, black 10%, transparent)) {
+  ::selection {
+    background-color: color-mix(in srgb, currentColor 12%, transparent);
+    color: var(--color-accent);
+    text-shadow: none;
+  }
+  ::-moz-selection {
+    background-color: color-mix(in srgb, currentColor 12%, transparent);
+    color: var(--color-accent);
+    text-shadow: none;
+  }
+}
+
+/* Theme attributes (map to each site's Webflow color variables) */
+[data-theme="dark"] {
+  background-color: var(--_colors---bg--dark);
+  color: var(--_colors---text--light);
+}
+[data-theme="dark-transparent"] {
+  color: var(--_colors---text--light) !important;
+  background-color: transparent;
+}
+
+/* Gradient text mechanism — define the gradient itself per site:
+   [data-gradient] { background: linear-gradient(...brand stops...) } */
+[data-gradient-text] {
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-repeat: repeat-x;
+  -webkit-text-fill-color: transparent;
+  color: inherit;
+}
+
+/* ------------------------------------------------
+   Interactive Link Effects
+   ------------------------------------------------ */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  top: var(--underline-top);
+  left: 0%;
+  height: var(--underline-height);
+  width: 0%;
+  background: currentColor;
+  transition: width var(--dur-bbs) var(--ease-bbs);
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+.link-underline:not(:hover)::after {
+  left: auto;
+  right: 0%;
+  width: 0%;
+}
+
+.inline-link-underline {
+  position: relative;
+  --underline-top: 96%;
+  --inline-underline-opacity: 0.24;
+}
+.inline-link-underline::after {
+  content: "";
+  position: absolute;
+  top: var(--underline-top);
+  left: 0%;
+  height: var(--underline-height);
+  width: 100%;
+  background: currentColor;
+  opacity: var(--inline-underline-opacity);
+  transition: opacity var(--dur-bbs) var(--ease-bbs);
+}
+.inline-link-underline:hover::after {
+  opacity: 1;
+}
+
+/* ------------------------------------------------
+   Animations
+   ------------------------------------------------ */
+@keyframes loopX {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes loopY {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.loop-animate-x {
+  animation: loopX var(--loop-x-duration) linear infinite;
+  will-change: transform;
+}
+.loop-animate-y {
+  animation: loopY var(--loop-y-duration) linear infinite;
+  will-change: transform;
+}
+.loop-animate-x.reverse {
+  animation: loopX var(--loop-x-duration) linear infinite reverse;
+  will-change: transform;
+}
+.loop-animate-y.reverse {
+  animation: loopY var(--loop-y-duration) linear infinite reverse;
+  will-change: transform;
+}
+
+.svg-animate-line {
+  stroke-dasharray: 10 10 !important;
+  animation: svgDash var(--svg-dash-duration) linear infinite;
+}
+.svg-animate-line.reverse {
+  animation: svgDash var(--svg-dash-duration) linear infinite reverse;
+}
+
+@keyframes svgDash {
+  to {
+    stroke-dashoffset: var(--svg-dash-offset);
+  }
+}
+
+/* ------------------------------------------------
+   Components / Patterns
+   ------------------------------------------------ */
+.image-w img {
+  transition: transform var(--dur-bbs) var(--ease-bbs);
+}
+.image-w:hover img {
+  transform: scale(var(--image-zoom-scale));
+}
+
+.s-wrapper::before,
+.s-wrapper::after {
+  display: none;
+}
+
+.filter-radio-button.w--redirected-checked ~ .label-filter-menu {
+  color: var(--_colors---text--inverted);
+}
+
+/* Motion respect */
+@media (prefers-reduced-motion: reduce) {
+  .loop-animate-x,
+  .loop-animate-y,
+  .svg-animate-line {
+    animation: none !important;
+  }
+
+  .image-w img,
+  .link-underline::after,
+  .inline-link-underline::after {
+    transition-duration: 1ms !important;
+  }
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════╗
+   ║  PART 2 — SITE CSS  (was sites/alphawerx/alphawerx.css)       ║
+   ╚═══════════════════════════════════════════════════════════════╝ */
+
+/* ═════════════════════════════════════════════════════════════════
+   alphawerx — site CSS
+   Loads AFTER core/core.css (reset, scaling system, utilities,
+   link effects, loops are already there — don't re-add them).
+   This file = brand tokens + anything unique to this client.
+   ═════════════════════════════════════════════════════════════════ */
+
+/* 00. Webflow font-face override (optional — delete if unused)
+@font-face {
+  font-family: "YourFont";
+  src: url("https://cdn.prod.website-files.com/....woff2") format("woff2");
+  font-feature-settings: "ss02" on;
+}
+*/
+
+/* 01. Brand tokens — point the aliases at this site's Webflow variables
+   (inspect any element in the browser to see the generated --_colors---* names) */
+:root {
+  --color-accent: var(--_colors---accent, #5498dc);
+  --color-bg-dark: var(--_colors---bg--dark, #0b0e14);
+  --color-text-light: var(--_colors---text-color--light, #f2f5ff);
+}
+
+/* Brand gradient used by [data-gradient] / [data-gradient-text] (optional) */
+[data-gradient] {
+  background: linear-gradient(272deg, #4f8d4b 1.51%, #8fc68f 99.59%);
+}
+[data-gradient-text] {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 02. OKLCH / Display-P3 color upgrades (optional — richer color on
+     supporting screens, Webflow's hex everywhere else)
+  @supports (color: oklch(50% 0.2 280)) {
+    :root { --_colors---accent: oklch(68.9% 0.112 35.8); }
+  }
+  @supports (color: color(display-p3 1 0 0)) {
+    :root { --_colors---accent: color(display-p3 0.84 0.5 0.41); }
+  }
+  */
+
+/* ── site-specific styles below this line ──────────────────────── */
+
+/* GLOWING BORDERS — visual layer for [data-glowing-border] cards.
+     Moved here from the Webflow <style id="glowing-border-css"> embed so it
+     lives in the repo with the JS that drives it (alphawerx.js sets
+     --glow-x / --glow-y / --glow-intensity by cursor proximity). */
+[data-glowing-border] {
+  /* ---- knobs (override per element or globally) ---- */
+  --glow-color: rgba(255, 255, 255, 0.5); /* ring color at the cursor */
+  --glow-size: 600px; /* reach of the ring gradient */
+  --glow-border-width: 1px; /* ring thickness */
+  --glow-rest: rgba(255, 255, 255, 0.08); /* resting border tint */
+  --glow-sheen: rgba(255, 255, 255, 0.04); /* interior wash on hover */
+  /* ---- driven by JS, leave alone ---- */
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-intensity: 0;
+  position: relative;
+  /* Resting border: inset shadow = no layout shift, follows the radius.
+       The element keeps its own background; just give it a border-radius. */
+  box-shadow: inset 0 0 0 var(--glow-border-width) var(--glow-rest);
+}
+
+[data-glowing-border="branded"] {
+  --glow-color: #8fc68f; /* ring color at the cursor */
+}
+[data-glowing-border]::before,
+[data-glowing-border]::after {
+  display: block;
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+/* Ring: a full radial gradient, masked down to a border-width band.
+     The two mask layers (content-box vs full) are composited with
+     exclude/xor, leaving only the padding ring visible — this is what
+     removes the need for an inner masking div. */
+[data-glowing-border]::before {
+  background: radial-gradient(
+    var(--glow-size) circle at var(--glow-x) var(--glow-y),
+    var(--glow-color),
+    transparent 40%
+  );
+  opacity: var(--glow-intensity);
+  transition: opacity 0.25s ease-out;
+  padding: var(--glow-border-width);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  z-index: 1;
+}
+/* Sheen: faint interior wash, only on the card actually hovered */
+[data-glowing-border]::after {
+  background: radial-gradient(
+    calc(var(--glow-size) * 1.35) circle at var(--glow-x) var(--glow-y),
+    var(--glow-sheen),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 450ms ease;
+  z-index: 2;
+}
+[data-glowing-border]:hover::after {
+  opacity: 1;
+}
+
+/* Mobile Landscape */
+@media screen and (max-width: 767px) {
+  [data-border-hide-ml] {
+    box-shadow: none !important;
+  }
+  [data-border-hide-ml]::after,
+  [data-border-hide-ml]::before {
+    display: none !important;
+  }
+}
+
+/* ---- tab bar ----------------------------------------------------
+     Anatomy per tab:
+       .auto-tab            pill button, overflow hidden (clips the fill)
+       .auto-tab-progress   absolutely-positioned fill, scaleX(0) → 1
+       .auto-tab-label      text, above the fill
+     The fill's CSS animation is the timer: its animation-duration is
+     injected per tab by the script, and its `animationend` event is
+     what advances to the next tab. Pausing = animation-play-state.
+  ------------------------------------------------------------------- */
+
+.auto-tab {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.auto-tab.is-active::after,
+.auto-tabs-toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    var(--_colors---gradient--button-stop-1),
+    var(--_colors---gradient--button-stop-2)
+  );
+  z-index: 0;
+}
+
+/* The timer: runs only on the active tab. Duration is set inline
+     per tab by the script (data-duration or the default). */
+.auto-tab.is-active .auto-tab-progress {
+  animation-name: tab-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes tab-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Pause = freeze the animation exactly where it is */
+.auto-tabs.is-paused .auto-tab-progress {
+  animation-play-state: paused;
+}
+
+.auto-tabs.is-paused .auto-tabs-toggle .icon-pause {
+  display: none;
+}
+.auto-tabs.is-paused .auto-tabs-toggle .icon-play {
+  display: inline-flex;
+}
+
+.auto-tabs-panel {
+  transition: opacity 0.45s var(--ease-bbs), transform 0.45s var(--ease-bbs),
+    visibility 0s linear 0.45s;
+}
+.auto-tabs-panel.is-active {
+  transition: opacity 0.45s var(--ease-bbs) 0.1s,
+    transform 0.45s var(--ease-bbs) 0.1s, visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auto-tabs-panels {
+    transition: none;
+  }
+  .auto-tabs-panel {
+    transform: none;
+    transition: opacity 0.3s var(--ease-bbs), visibility 0s linear 0.3s;
+  }
+  .auto-tabs-panel.is-active {
+    transition: opacity 0.3s var(--ease-bbs), visibility 0s;
+  }
+}
+
+/* ---- the track: its height IS the scroll runway ---------------- */
+.deploy-track {
+  --deploy-step-length: 70vh; /* scroll distance per phase — pacing knob */
+  --deploy-sticky-top: 0px; /* top clearance consumed by the centring
+                                    script — set to your fixed nav height
+                                    (px) to centre BELOW the nav;
+                                    0px = true viewport centre */
+}
+
+.deploy-item-head {
+  -webkit-tap-highlight-color: transparent;
+}
+.deploy-item-body {
+  transition: grid-template-rows 0.55s var(--ease-bbs);
+}
+.deploy-item.is-active .deploy-item-body {
+  grid-template-rows: 1fr;
+}
+
+.deploy-item.is-active .deploy-item-body-inner {
+  opacity: 1;
+  transition: opacity 0.45s var(--ease-bbs) 0.12s;
+}
+.deploy-item-body-inner::before {
+  content: "";
+  position: absolute;
+  left: 1em;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(143, 190, 122, 0.6),
+    rgba(143, 190, 122, 0)
+  );
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-bbs);
+}
+.deploy-item.is-active .deploy-item-body-inner::before {
+  opacity: 1;
+}
+
+.deploy-item-body li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.3125em;
+  height: 0.3125em;
+  border-radius: 50%;
+  background: var(--_colors---background--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deploy-video {
+    transform: none;
+  }
+}
+
+@media (max-width: 991px) {
+  /* the relocated video card inside the open body — keep in
+     sync with PHONE_MQ in the DeployAccordion module */
+  .deploy-item .deploy-video {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    margin-top: 16px;
+  }
+}
+
+@property --mask-t {
+  syntax: "<length-percentage>";
+  initial-value: 0%;
+  inherits: false;
+}
+@property --mask-b {
+  syntax: "<length-percentage>";
+  initial-value: 0%;
+  inherits: false;
+}
+@property --mask-l {
+  syntax: "<length-percentage>";
+  initial-value: 0%;
+  inherits: false;
+}
+@property --mask-r {
+  syntax: "<length-percentage>";
+  initial-value: 0%;
+  inherits: false;
+}
+
+.mask-top,
+.mask-bottom,
+.mask-left,
+.mask-right {
+  --mask-fade: 14%;
+
+  -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--mask-t, 0%),
+      #000 calc(100% - var(--mask-b, 0%)),
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--mask-l, 0%),
+      #000 calc(100% - var(--mask-r, 0%)),
+      transparent 100%
+    );
+  mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--mask-t, 0%),
+      #000 calc(100% - var(--mask-b, 0%)),
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--mask-l, 0%),
+      #000 calc(100% - var(--mask-r, 0%)),
+      transparent 100%
+    );
+
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.mask-top {
+  --mask-t: var(--mask-top-size, var(--mask-fade));
+}
+.mask-bottom {
+  --mask-b: var(--mask-bottom-size, var(--mask-fade));
+}
+.mask-left {
+  --mask-l: var(--mask-left-size, var(--mask-fade));
+}
+.mask-right {
+  --mask-r: var(--mask-right-size, var(--mask-fade));
+}
+
+.s-bg-grid {
+  --bg-grid-column: 23;
+  --bg-grid-line-color: rgba(255, 255, 255, 0.06);
+
+  background-image: linear-gradient(
+    to right,
+    transparent calc(100% - 1px),
+    var(--bg-grid-line-color) calc(100% - 1px)
+  );
+  background-size: calc(100% / var(--bg-grid-column, 23)) 100%;
+  background-position: center;
+}
+
+@media (max-width: 991px) {
+  .s-bg-grid {
+    --bg-grid-column: 13;
+  }
+}
+
+@media (max-width: 767px) {
+  .s-bg-grid {
+    --bg-grid-column: 9;
+    --bg-grid-line-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+@media (max-width: 479px) {
+  .s-bg-grid {
+    --bg-grid-column: 7;
+  }
+}
+
+/* Placeholder state */
+select.input-text-field {
+  color: color-mix(in srgb, currentColor 56%, transparent);
+}
+
+/* Active state when a real option is selected */
+select.input-text-field.has-value {
+  color: currentColor;
+}
+
+/* Ensure dropdown options remain fully visible */
+select.input-text-field option {
+  color: currentColor;
+}
+
+/* Glowing Button CSS */
+
+.glowing-wrapper-button:after {
+  background: radial-gradient(
+    85% 120% at 50% 120%,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 999px;
+  content: "";
+  height: calc(100% + 4px);
+  left: -2px;
+  opacity: 0;
+  position: absolute;
+  top: -2px;
+  transition: 1s all;
+  width: calc(100% + 4px);
+}
+
+.glowing-wrapper-button:hover:after {
+  opacity: 0.7;
+}
+
+.glowing-wrapper-active .glowing-wrapper-animations,
+.glowing-wrapper-active .glowing-wrapper-borders-masker {
+  opacity: 1;
+}
+
+.glowing-wrapper-animations:before,
+.glowing-wrapper-borders:before {
+  content: "";
+  float: left;
+  padding-top: 100%;
+}
+
+.glowing-wrapper-animations:after,
+.glowing-wrapper-borders:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.glowing-wrapper-animations {
+  pointer-events: none;
+}
+
+.glowing-wrapper-animations * {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.glowing-wrapper-borders,
+.glowing-wrapper-glow,
+.glowing-wrapper-mask {
+  animation: borderTurn 5s infinite linear;
+  background-image: conic-gradient(
+    from 0 at 50% 50%,
+    rgba(177, 215, 177, 1) 0deg,
+    rgba(143, 198, 143, 0.5) 27.5deg,
+    rgba(143, 198, 143, 0) 55deg,
+    rgba(27, 147, 207, 0) 125deg,
+    rgba(27, 147, 207, 0.5) 152.5deg,
+    rgba(95, 179, 221, 1) 180deg,
+    rgba(27, 147, 207, 0.5) 207.5deg,
+    rgba(27, 147, 207, 0) 235deg,
+    rgba(143, 198, 143, 0) 305deg,
+    rgba(143, 198, 143, 0.5) 332.5deg,
+    rgba(177, 215, 177, 1) 360deg
+  );
+
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.glowing-wrapper-mask-wrapper {
+  -webkit-mask: url("data:image/svg+xml,url('data:image/svg+xml,%253Csvg width='28' height='24' viewBox='0 0 28 24' fill='none' xmlns='http://www.w3.org/2000/svg'%253E%253Crect width='28' height='24' fill='black'/%253E%253C/svg%253E%250A');");
+  mask: url("data:image/svg+xml,url('data:image/svg+xml,%253Csvg width='28' height='24' viewBox='0 0 28 24' fill='none' xmlns='http://www.w3.org/2000/svg'%253E%253Crect width='28' height='24' fill='black'/%253E%253C/svg%253E%250A');");
+  mask-repeat: repeat;
+  -webkit-mask-size: auto;
+  mask-size: auto;
+}
+
+.glowing-wrapper-borders {
+  animation-name: borderTurnWithTranslate;
+}
+
+.glowing-wrapper-borders-masker {
+  content: "";
+  inset: 0;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes borderTurn {
+  0% {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes borderTurnWithTranslate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+/* GSAP reveal FOUC guard — WITH FAILSAFE (baked-in change).
+   Hidden until GsapMotion adds .is-gsap-ready, but a pure-CSS
+   animation force-reveals everything at 2.5s so a slow or failed
+   JS fetch can never leave the copy invisible. The hide and the
+   failsafe live in the same file on purpose: if this stylesheet
+   doesn't load, nothing was hidden in the first place. */
+html.w-mod-js [data-gsap-title],
+html.w-mod-js [data-gsap-reveal] {
+  visibility: hidden;
+  animation: aw-reveal-failsafe 0s 2.5s forwards;
+}
+[data-gsap-title].is-gsap-ready,
+[data-gsap-reveal].is-gsap-ready {
+  visibility: visible !important;
+  animation: none;
+}
+@keyframes aw-reveal-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+

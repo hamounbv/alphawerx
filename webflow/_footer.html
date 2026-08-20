@@ -1,0 +1,25 @@
+<!-- ============================================================
+     AlphaWerx — Site Settings → Custom Code → FOOTER  (phase 1)
+     Version-controlled source of truth for the before-</body> block.
+
+     Changes vs the previous footer:
+     - Lenis now loads from jsDelivr (was unpkg.com, synchronous)
+       and with defer
+     - the inline Lenis init moved INTO js/alphawerx.js (guarded)
+     - the p9d736.csb.app script replaced by the jsDelivr build
+     - the heroVideo playbackRate inline script moved INTO
+       js/alphawerx.js (null-guarded)
+
+     Deferred scripts execute in document order, so Lenis is always
+     ready before alphawerx.js runs its init. The GSAP files
+     (gsap/ScrollTrigger/SplitText/CustomEase/Observer) are emitted
+     by Webflow itself for IX3 — do NOT add another copy here; they
+     load synchronously before any deferred script runs.
+     Remember to bump @1.0.0 when you tag a new release.
+     ============================================================ -->
+
+<!-- Lenis Smooth Scrolling -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.24/dist/lenis.min.js" defer></script>
+
+<!-- Site JS (GitHub → jsDelivr, pinned release) -->
+<script src="https://cdn.jsdelivr.net/gh/hamounbv/alphawerx@1.0.0/js/alphawerx.min.js" defer></script>
