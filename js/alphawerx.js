@@ -20,7 +20,7 @@
    alphawerx — SINGLE FILE BUILD                          v2.0
    core.js + site JS merged into one browser file.
 
-   ┌─ PART 1 · Blankboard Studio core ────────────────────────────┐
+   ┌─ PART 1 ·  core ─────────────────────────────────────────────┐
    │  Debug · Utils · boot · NavShrink · GoToTop · SmartSwiper    │
    │  ClickOnLoad · KeyboardIx3Toggle                             │
    │  Still exported as window.BBCore so anything that already    │
@@ -75,7 +75,7 @@
 (function () {
   "use strict";
 
-  /* ╔═══════════════════════════════════════════════════════════════╗
+  /*   ╔═══════════════════════════════════════════════════════════════╗
        ║  PART 1 — CORE                                                ║
        ╚═══════════════════════════════════════════════════════════════╝ */
 
