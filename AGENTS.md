@@ -13,7 +13,7 @@ source of agent rules — edit this file, never a copy of it.
 - Production domain: `alphawerx.ai`
 - CDN: `https://cdn.jsdelivr.net/gh/hamounbv/alphawerx@<VER>/`
   (`css/alphawerx.min.css`, `js/alphawerx.min.js`)
-- Production release: snippets pin `@1.0.0`; tag `v1.0.1` also exists but
+- Production release: snippets pin `@1.0.2` (hero slowdown removed); tag `v1.0.1` was skipped and
   no snippet references it yet (see `GOTCHAS.md`)
 
 ## Who owns what
