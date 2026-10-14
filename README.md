@@ -4,7 +4,7 @@ Version-controlled custom code for **alphawerx.ai** (Webflow site `6a550527033ca
 
 ```
 css/alphawerx.css      → all site custom CSS (core.css + alphawerx.css merged, load order preserved)
-js/alphawerx.js        → all site custom JS (v2.0 single-file build + Lenis init + hero-video snippet)
+js/alphawerx.js        → all site custom JS (v2.0 single-file build + Lenis init)
 webflow/_header.html   → the Site Settings → Head block (paste into Webflow)
 webflow/_footer.html   → the Site Settings → Footer block (paste into Webflow)
 ```
@@ -16,7 +16,7 @@ Replaces, in one move: the two `p9d736.csb.app` stylesheet links in the `G | Emb
 1. **Swiper guard** — `bootSwiper()` now skips loading Swiper (~173 KB decoded, measured) on pages with no `[data-swiper]` element. This site has none; if a slider is ever added, Swiper loads exactly as before. Caveat: `SmartSwiper.ready()/initEl()` callbacks stay queued on slider-less pages — nothing on this site uses them (verified Aug 2026).
 2. **Reveal failsafe** — the `[data-gsap-reveal]/[data-gsap-title]` hide rules at the bottom of the CSS now carry a pure-CSS animation that force-reveals all copy at 2.5 s, so a slow or failed JS fetch can never leave the page blank.
 3. **Lenis init internalized** — moved from the footer inline script into `js/alphawerx.js`, guarded: skips the Webflow editor, tolerates a missing Lenis (native scroll fallback) or missing GSAP (plain rAF driver). Same options, same `[data-h-scroll]` horizontal rail at ≤991 px, same `gsap.ticker` bridge.
-4. **heroVideo guard** — the `playbackRate = 0.75` snippet moved into the JS, null-guarded (the inline version threw a TypeError on any page without `#heroVideo`).
+4. **heroVideo slowdown removed** — the `playbackRate = 0.75` snippet first moved into the JS (null-guarded), then was removed entirely; the hero video plays at normal speed.
 
 Boot label bumped to `alphawerx v2.0.1` — check `window.BB.site` in the console to confirm which build a page is running.
 
@@ -45,7 +45,7 @@ Boot label bumped to `alphawerx v2.0.1` — check `window.BB.site` in the consol
 3. In the Designer, open the `G | Embed Code` component and delete its contents (the remixicon link moved to the head; the two p9d736 links are superseded; the empty "staging only" style block goes too). Keep or delete the component shell itself — it's hidden either way.
 4. Publish to the webflow.io staging domain first → QA (below) → publish to alphawerx.ai.
 
-**QA checklist:** hero video plays (0.75×) · smooth scroll + go-to-top easing works · headline/word reveals animate · COALESCE tabs auto-rotate, pause button works · Five-Phase accordion opens + swaps images · count-ups animate (and never show negative values — this build's easing is monotonic) · glow borders follow the cursor · `window.BB.site` = `alphawerx v2.0.1` · DevTools Network: zero requests to `csb.app` or `unpkg.com`, no 404s, and **no Swiper request** on the homepage.
+**QA checklist:** hero video plays (normal speed) · smooth scroll + go-to-top easing works · headline/word reveals animate · COALESCE tabs auto-rotate, pause button works · Five-Phase accordion opens + swaps images · count-ups animate (and never show negative values — this build's easing is monotonic) · glow borders follow the cursor · `window.BB.site` = `alphawerx v2.0.1` · DevTools Network: zero requests to `csb.app` or `unpkg.com`, no 404s, and **no Swiper request** on the homepage.
 
 ## Release workflow
 

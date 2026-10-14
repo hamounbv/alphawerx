@@ -81,7 +81,7 @@ behaviour.
 
 ```
 css/alphawerx.css        all site CSS (studio core + site CSS merged, order preserved)
-js/alphawerx.js          all site JS (v2.0 build + Lenis init + hero-video guard)
+js/alphawerx.js          all site JS (v2.0 build + Lenis init)
 js/alphawerx-dotmap.js   dot-map script, added after v1.0.0; not loaded by any snippet
 webflow/_header.html     Site Settings → Head
 webflow/_footer.html     Site Settings → Footer

@@ -11,8 +11,8 @@
    2. The Lenis init moved here from the Webflow footer inline
       script (guarded: skips the editor, tolerates a missing Lenis
       or GSAP — a failed CDN degrades to native scroll, never an error).
-   3. The hero-video playbackRate snippet moved here, null-guarded
-      (the old inline version threw on pages without #heroVideo).
+   3. The hero-video playbackRate (0.75x) snippet was removed —
+      the hero video now plays at normal speed.
    Everything below the marker is the v2.0 single-file build, unchanged.
    ============================================================ */
 
@@ -2245,14 +2245,4 @@
       requestAnimationFrame(raf);
     })(0);
   }
-})();
-
-/* ============================================================
-   Hero video playback rate — moved here from the footer inline
-   script (baked-in change #3), now null-guarded so pages without
-   #heroVideo don't throw.
-   ============================================================ */
-(function () {
-  var v = document.getElementById("heroVideo");
-  if (v) v.playbackRate = 0.75;
 })();
